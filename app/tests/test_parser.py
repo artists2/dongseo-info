@@ -35,10 +35,16 @@ class Parsing:
         if not self.is_important():
             print("주요 공지가 없습니다.")
         _elements = self.soup.findAll("tr", {"class": "isnotice"})
-        print(_elements[0].find("span").text)  # text
-        print(_elements[0].find("td", {"class": "f-date date"}).text)  # day
-        print(f'https://www.dongseo.ac.kr{_elements[0].find("a")["href"]}')  # link
-        # self.day =
+        element = []
+        for i in range(0, len(_elements)):
+            e = list()
+            e.append(_elements[i].find("span").text)
+            e.append(_elements[i].find("td", {"class": "f-date date"}).text)
+            e.append('https://www.dongseo.ac.kr' + _elements[i].find("a")["href"])
+            # element.append(e)
+            print(e)
+        print(element)  # complete
+
 
     def recruit(self):  # 모집
         pass

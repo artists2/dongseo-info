@@ -14,3 +14,6 @@ from test_parser import Parsing
 
 test_parser_important_academic = Parsing("https://www.dongseo.ac.kr/kr/index.php?pCode=MN2000194")
 test_parser_important_academic.important_academic()
+
+page = requests.get(_page)
+ScheduleParser.parse()

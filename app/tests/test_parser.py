@@ -41,10 +41,9 @@ class Parsing:
             e.append(_elements[i].find("span").text)
             e.append(_elements[i].find("td", {"class": "f-date date"}).text)
             e.append('https://www.dongseo.ac.kr' + _elements[i].find("a")["href"])
-            # element.append(e)
+            element.append(e)
             print(e)
-        print(element)  # complete
-
+        print(element[0])  # complete
 
     def recruit(self):  # 모집
         pass

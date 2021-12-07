@@ -1,76 +1,131 @@
 import requests
 from pydantic import BaseModel
-from bs4 import BeautifulSoup as bs
 import re
+from bs4 import BeautifulSoup as bs
+from abc import *
+# self.page = page
+# self.soup = bs(self.page.text, 'html.parser')
 
 
-class Parsing:
-    day: int  # 공지날짜
-    text: str
-    link: str  # 공지 이동 링크
-    picture: bin  # 바이너리 저장
+class BaseParser(metaclass=ABCMeta):
 
-    def __init__(self, _page: str):
-        self.page = requests.get(_page)  # page응답 안할시 구현해야함
-        self.soup = bs(self.page.text, "html.parser")
+    @staticmethod
+    # @abstractmethod
+    def parse(page: str):
+        soup = bs(page, "html.parser")
+        elements = soup.findAll("tr", {"class": re.compile('child_1|child_2')})
+        element = []
+        for i in range(0, len(elements)):
+            e = list()
+            e.append(elements[i].find("a").find("span").text)
+            e.append(elements[i].find("td", {"class": "f-date date"}).text)
+            e.append('https://www.dongseo.ac.kr' + elements[i].find("a")["href"])
+            element.append(e)
+            print(e)
+        print(element[0])
 
-    def schedule_parser(self) -> None:  # 매달 1일 parsing
-        # https://www.dongseo.ac.kr/kr/index.php?pCode=dscalendar
-        elements_day = self.soup.findAll("div", {"class": "date-core"})  # day
-        elements_schedule = self.soup.findAll("div", {"class": "body-core"})  # schedule
+        return {}
+
+
+class BaseImportantParser(BaseParser, metaclass=ABCMeta):
+    @staticmethod
+    # @abstractmethod
+    def parse(page: str) -> dict:
+        pass
+
+    @staticmethod
+    # @abstractmethod
+    def is_important(page: str) -> bool:
+        pass
+
+
+class ScheduleParser(BaseParser):  # ScheduleParser.parse(page)
+    @staticmethod
+    def parse(page: str) -> dict:
+        soup = bs(page, "html.parser")
+        elements_day = soup.findAll("div", {"class": "date-core"})  # day
+        elements_schedule = soup.findAll("div", {"class": "body-core"})  # schedule
 
         _day = [''.join(e.text.split()) for e in elements_day]
         _schedule = [''.join(s.text.split()) for s in elements_schedule]
 
         for i in range(0, len(_day)):  # test code
             print(_day[i], _schedule[i])
+        return {
+            "date": "",
+            "schedule": ""
+        }
 
-    def academic(self):  # 학사
-        self.day = 0
-        self.text = ''
-        # elements_
-        pass
 
-    def important_academic(self):  # 중요 학사 공지 (중요 공지는 있는가 없는가 체크해야함)
-        if not self.is_important():
-            print("주요 공지가 없습니다.")
-        _elements = self.soup.findAll("tr", {"class": "isnotice"})
+class AcademicParser(BaseParser):
+    @staticmethod
+    def parse(page: str) -> dict:
+        soup = bs(page, "html.parser")
+        elements = soup.findAll("tr", {"class": re.compile('child_1|child_2')})
         element = []
-        for i in range(0, len(_elements)):
+        for i in range(0, len(elements)):
             e = list()
-            e.append(_elements[i].find("span").text)
-            e.append(_elements[i].find("td", {"class": "f-date date"}).text)
-            e.append('https://www.dongseo.ac.kr' + _elements[i].find("a")["href"])
+            e.append(elements[i].find("span").text)
+            e.append(elements[i].find("td", {"class": "f-date date"}).text)
+            e.append('https://www.dongseo.ac.kr' + elements[i].find("a")["href"])
             element.append(e)
             print(e)
-        print(element[0])  # complete
+        print(element[0])
 
-    def recruit(self):  # 모집
-        pass
+        return {}
 
-    def important_recruit(self):  # 중요 모집 공지
-        pass
 
-    def notices(self):  # 공지
-        pass
+class ImportantAcademicParser(BaseImportantParser):
+    @staticmethod
+    def parse(page: str) -> dict:
+        soup = bs(page, "html.parser")
+        if not ImportantAcademicParser.is_important(page):
+            print("주요 공지가 없습니다.")  # print 말고 다른거로 수정해야함
+            return {}
+        elements = soup.findAll("tr", {"class": "isnotice"})
+        element = []
+        for i in range(0, len(elements)):
+            e = list()
+            e.append(elements[i].find("a").find("span").text)
+            e.append(elements[i].find("td", {"class": "f-date date"}).text)
+            e.append('https://www.dongseo.ac.kr' + elements[i].find("a")["href"])
+            element.append(e)
+            print(e)
+        print(element[0])
+        return {
+            "title": "",
+            "date": "",
+            "url": ""
+        }
 
-    def important_notices(self):  # 중요 공지
-        pass
-
-    def event(self):  # 행사
-        pass
-
-    def important_event(self):  # 중요 행사 공지
-        pass
-
-    def scholarship(self):  # 장학
-        pass
-
-    def important_scholarship(self):  # 중요 장학 공지
-        pass
-
-    def is_important(self) -> bool:  # 중요 공지가 있는지 없는지 반환
-        if self.soup.findAll("tr", {"class": "isnotice"}):
+    @staticmethod
+    def is_important(page: str) -> bool:
+        soup = bs(page, "html.parser")
+        if soup.findAll("tr", {"class": "isnotice"}):
             return True
         else:
             return False
+
+
+class RecruitParser(BaseParser):
+    @staticmethod
+    def parse(page: str):
+        pass
+
+
+class NoticeParser(BaseParser):
+    @staticmethod
+    def parse(page: str):
+        pass
+
+
+class EventParser(BaseParser):
+    @staticmethod
+    def parse(page: str):
+        pass
+
+
+class ScholarParser(BaseParser):
+    @staticmethod
+    def parse(page: str):
+        pass

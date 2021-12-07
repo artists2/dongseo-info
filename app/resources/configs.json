@@ -1,0 +1,10 @@
+{
+  "URL": {
+    "SCHEDULE_PAGE": "https://www.dongseo.ac.kr/kr/index.php?pCode=dscalendar",
+    "ACADEMIC_PAGE": "https://www.dongseo.ac.kr/kr/index.php?pCode=MN2000194",
+    "RECRUIT_PAGE": "https://www.dongseo.ac.kr/kr/index.php?pCode=MN2000197",
+    "NOTICE_PAGE": "https://www.dongseo.ac.kr/kr/index.php?pCode=MN2000191",
+    "EVENT_PAGE": "https://www.dongseo.ac.kr/kr/index.php?pCode=MN2000198",
+    "SCHOLAR_PAGE": "https://www.dongseo.ac.kr/kr/index.php?pCode=MN2000195"
+  }
+}

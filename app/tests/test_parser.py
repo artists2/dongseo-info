@@ -10,76 +10,28 @@ from abc import *
 class BaseParser(metaclass=ABCMeta):
 
     @staticmethod
-    # @abstractmethod
+    @abstractmethod
     def parse(page: str):
-        soup = bs(page, "html.parser")
-        elements = soup.findAll("tr", {"class": re.compile('child_1|child_2')})
-        element = []
-        for i in range(0, len(elements)):
-            e = list()
-            e.append(elements[i].find("a").find("span").text)
-            e.append(elements[i].find("td", {"class": "f-date date"}).text)
-            e.append('https://www.dongseo.ac.kr' + elements[i].find("a")["href"])
-            element.append(e)
-            print(e)
-        print(element[0])
-
-        return {}
+        pass
 
 
-class BaseImportantParser(BaseParser, metaclass=ABCMeta):
+class BaseImportantNoticesParser(BaseParser, metaclass=ABCMeta):
     @staticmethod
-    # @abstractmethod
+    @abstractmethod
     def parse(page: str) -> dict:
         pass
 
     @staticmethod
-    # @abstractmethod
+    @abstractmethod
     def is_important(page: str) -> bool:
         pass
 
 
-class ScheduleParser(BaseParser):  # ScheduleParser.parse(page)
+class ImportantNoticesParser(BaseImportantNoticesParser):
     @staticmethod
     def parse(page: str) -> dict:
         soup = bs(page, "html.parser")
-        elements_day = soup.findAll("div", {"class": "date-core"})  # day
-        elements_schedule = soup.findAll("div", {"class": "body-core"})  # schedule
-
-        _day = [''.join(e.text.split()) for e in elements_day]
-        _schedule = [''.join(s.text.split()) for s in elements_schedule]
-
-        for i in range(0, len(_day)):  # test code
-            print(_day[i], _schedule[i])
-        return {
-            "date": "",
-            "schedule": ""
-        }
-
-
-class AcademicParser(BaseParser):
-    @staticmethod
-    def parse(page: str) -> dict:
-        soup = bs(page, "html.parser")
-        elements = soup.findAll("tr", {"class": re.compile('child_1|child_2')})
-        element = []
-        for i in range(0, len(elements)):
-            e = list()
-            e.append(elements[i].find("span").text)
-            e.append(elements[i].find("td", {"class": "f-date date"}).text)
-            e.append('https://www.dongseo.ac.kr' + elements[i].find("a")["href"])
-            element.append(e)
-            print(e)
-        print(element[0])
-
-        return {}
-
-
-class ImportantAcademicParser(BaseImportantParser):
-    @staticmethod
-    def parse(page: str) -> dict:
-        soup = bs(page, "html.parser")
-        if not ImportantAcademicParser.is_important(page):
+        if not ImportantNoticesParser.is_important(page):
             print("주요 공지가 없습니다.")  # print 말고 다른거로 수정해야함
             return {}
         elements = soup.findAll("tr", {"class": "isnotice"})
@@ -107,25 +59,37 @@ class ImportantAcademicParser(BaseImportantParser):
             return False
 
 
-class RecruitParser(BaseParser):
+class NoticesParser(BaseParser):  #
     @staticmethod
     def parse(page: str):
-        pass
+        soup = bs(page, "html.parser")
+        elements = soup.findAll("tr", {"class": re.compile('child_1|child_2')})
+        element = []
+        for i in range(0, len(elements)):
+            e = list()
+            e.append(elements[i].find("a").find("span").text)
+            e.append(elements[i].find("td", {"class": "f-date date"}).text)
+            e.append('https://www.dongseo.ac.kr' + elements[i].find("a")["href"])
+            element.append(e)
+            print(e)
+        print(element[0])
+
+        return {}
 
 
-class NoticeParser(BaseParser):
+class ScheduleParser(BaseParser):  # ScheduleParser.parse(page)
     @staticmethod
-    def parse(page: str):
-        pass
+    def parse(page: str) -> dict:
+        soup = bs(page, "html.parser")
+        elements_day = soup.findAll("div", {"class": "date-core"})  # day
+        elements_schedule = soup.findAll("div", {"class": "body-core"})  # schedule
 
+        _day = [''.join(e.text.split()) for e in elements_day]
+        _schedule = [''.join(s.text.split()) for s in elements_schedule]
 
-class EventParser(BaseParser):
-    @staticmethod
-    def parse(page: str):
-        pass
-
-
-class ScholarParser(BaseParser):
-    @staticmethod
-    def parse(page: str):
-        pass
+        for i in range(0, len(_day)):  # test code
+            print(_day[i], _schedule[i])
+        return {
+            "date": "",
+            "schedule": ""
+        }

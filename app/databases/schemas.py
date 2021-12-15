@@ -9,4 +9,13 @@ class NoticesInformation(BaseModel):
     link: str
 
     class Config:
-        orm_mode = True  # ?
+        orm_mode = True  # Python Class -> SQL (ORM)
+
+
+class ScheduleInformation(BaseModel):
+    id: int
+    date: str
+    title: str
+
+    class Config:
+        orm_mode = True

@@ -1,21 +1,27 @@
 from pydantic import BaseModel
-from enum import Enum
+from abc import *
 
 
-class NoticesInformation(BaseModel):
+class BaseInformation(metaclass=ABCMeta):
     id: int
     date: str
     title: str
+
+
+class NoticesInformation(BaseModel, BaseInformation):
+    # id: int
+    # date: str
+    # title: str
     link: str
 
     class Config:
         orm_mode = True  # Python Class -> SQL (ORM)
 
 
-class ScheduleInformation(BaseModel):
-    id: int
-    date: str
-    title: str
+class ScheduleInformation(BaseModel, BaseInformation):
+    # id: int
+    # date: str
+    # title: str
 
     class Config:
         orm_mode = True

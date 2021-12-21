@@ -11,8 +11,9 @@ def create_notices(db: Session, id: int, date: str, title: str, link: str) -> mo
     return notice_info
 
 
-def get_notices(db: Session):
-    pass
+def get_notices(db: Session) -> Session:
+    notices = db.query(models.Notices).all()
+    return notices
 
 
 def update_notices(db: Session):
@@ -23,7 +24,7 @@ def delete_notices(db: Session):
     pass
 
 
-def create_schedules(db: Session, id: int, date: str, title: str) -> models.Notices:
+def create_schedules(db: Session, id: int, date: str, title: str) -> models.Schedules:
     schedule_info = models.Schedules(id=id, date=date, title=title)
     db.add(schedule_info)
     db.commit()
@@ -31,8 +32,9 @@ def create_schedules(db: Session, id: int, date: str, title: str) -> models.Noti
     return schedule_info
 
 
-def get_schedule(db: Session):
-    pass
+def get_schedule(db: Session) -> Session:
+    schedule = db.query(models.Schedules).all()
+    return schedule
 
 
 def update_schedule(db: Session):

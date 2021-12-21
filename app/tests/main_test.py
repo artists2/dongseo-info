@@ -2,7 +2,6 @@ import requests
 import json
 from test_parser import *
 
-
 with open('../resources/configs.json', 'r') as f:
     config = json.load(f)
 
@@ -29,6 +28,6 @@ with open('../resources/configs.json', 'r') as f:
 # NoticesParser.parse(page)
 # ImportantNoticesParser.parse(page)
 #
-# page = requests.get(config['URL']['SCHEDULE_PAGE']).text
-# ScheduleParser.parse(page)
+page = requests.get(config['URL']['SCHEDULE_PAGE']).text
+ScheduleParser.parse(page)
 #
